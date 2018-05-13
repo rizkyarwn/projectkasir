@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Detail Order - {{ block.super }}{% endblock %}
+
+{% block content %}
+  <h1 class="page-header">Page Detail Order</h1>
+  <ol class="breadcrumb" style="margin-bottom: 5px;">
+    <li><a href="/">Beranda</a></li>
+    <li class="active">Detail Order</li>
+  </ol><br/>
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        TABEL DETAIL ORDER
+      </div>
+      <!-- /.panel-heading -->
+      <div class="panel-body">
+<div class="row">
+      <div class="col-md-6">
+        <span color="red">
+          Nama Pelanggan : </span><br>
+        <span> <font size="6" style="color: red;"><b>{{ order.pelanggan.nama }}</b></font></span>
+      </div>
+      <div class="col-md-6 text-xl-center btn btn-default" disabled>
+        <font size="6" style="color: red;"><b>{{ order.pelanggan.meja.nomor }}</b></font></span><br>
+        <span>( {{ order.pelanggan.meja.fasilitas }} )</span>
+      </div>
+    </div>
+  <hr/>
+  <table class="table" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th>Produk</th>
+            <th>Qty</th>
+            <th>Diskon</th>
+            <th>Total Harga</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for detailorder in semua_order %}
+          <tr>
+            <td>{{ detailorder.produk.nama }}</td>
+            <td>{{ detailorder.qty }}</td>
+            <td>{{ detailorder.diskon }}</td>
+            <td>{{ detailorder.total_harga_produk }}</td>
+          </tr>
+        {% empty %}
+         <tr>
+            <td colspan="4">Transaksi kosong!</td></tr>
+      {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+          <td colspan="3"><b>TOTAL</b></td>
+          <td colspan="2"><font size="5" style="color: red;"><b>{{ order.total_order }}</b></font></td>
+        </tr>
+      </tfoot>
+  </table>
+</div></div></div></div>
+  <br><br>
+  <tr>
+    <td>
+      <a class="fa fa-mail-reply btn btn-danger" href="{% url 'view_order_page' %}"></a>
+    </td>
+  <td>
+    <a class="fa fa-edit btn btn-warning" href="{% url 'update_order_page' pk=order.pk %}" title="Edit Order"> Edit Data Order</a>
+  </td>
+  </tr>
+{% endblock %}

@@ -1,0 +1,112 @@
+@media print{
+  .print-tidak-tampil {
+    display: none;
+  }
+}
+@media print{
+  .tampilkan{
+    display: block;
+  }
+  .input-print {
+    background: transparent;
+    border: none;
+  }
+  .input-print[type=number] {
+      -moz-appearance: textfield;
+  }
+  .input-print[type=number]::-webkit-inner-spin-button,
+  .input-print[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  } 
+}
+
+#head{
+  text-align: center;
+  margin: 3rem 0;
+}
+#nick{
+  margin: 1rem 0;
+}
+#foot{
+  text-align: center;
+  margin: 3rem 0;
+}
+
+.p {
+  margin: .2rem 0;
+  font-size: 12pt;
+  font-weight: bold;
+  font-family: Arial;
+}
+
+p {
+  margin: .3rem 0;
+}
+
+.teks1
+{
+    font-size: 17pt;
+    font-weight: bold;
+    font-family: Arial;
+}
+.teks2
+{
+    font-size: 12pt;
+    font-weight: bold;
+    font-family: Arial;
+}
+.teks3
+{
+    font-size: 15pt;
+    font-weight: bold;
+    font-family: Arial;
+}
+
+.label
+{
+  text-align: left;
+  color: black;
+    font-size: 10pt;
+    font-weight: bold;
+    font-family: Arial;
+}
+.contents
+{
+    border: 1px dotted black;
+    padding: 5px;
+}
+.name
+{
+  text-align: left;
+  color: black;
+    font-size: 15pt;
+}
+.name1
+{
+  text-align: center;
+  color: black;
+    font-size: 15pt;
+}
+.left
+{
+    float: left;
+    width: 50px;
+    height: 50px;
+}
+.center
+{
+    text-align: center;
+    margin-left: 60px;
+    line-height:50px;
+}
+.right
+{
+    float: right;
+    margin-left: 60px;
+    line-height:50px;
+}
+.clear
+{
+    clear: both;
+}

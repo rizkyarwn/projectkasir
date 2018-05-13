@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}Detail Transaksi - {{ block.super }}{% endblock %}
+
+{% block content %}
+
+  <h1 class="page-header">Page Detail Transaksi</h1>
+  <ol class="breadcrumb" style="margin-bottom: 5px;">
+    <li><a href="/">Beranda</a></li>
+    <li class="active">Detail Transaksi</li>
+  </ol><br/>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        TABEL DETAIL ORDER
+      </div>
+      <!-- /.panel-heading -->
+      <div class="panel-body">
+
+<div id="printableTable">
+<div class="row">
+      <div class="col-md-6">
+        <span color="red">
+          Nama Pelanggan : </span><br>
+        <span> <font size="6" style="color: red;"><b>{{ transaksi.pelanggan.nama }}</b></font></span>
+      </div>
+      <div class="col-md-6 text-xl-center btn btn-default" disabled>
+        <font size="6" style="color: red;"><b>{{ transaksi.pelanggan.meja.nomor }}</b></font></span><br>
+        <span>( {{ transaksi.pelanggan.meja.fasilitas }} )</span>
+      </div>
+    </div>
+  <hr/>
+  <table class="table" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th>Produk</th>
+            <th>Qty</th>
+            <th>Total Harga</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for detailtransaksi in semua_transaksi %}
+          <tr>
+            <td>{{ detailtransaksi.produk.nama }}</td>
+            <td>{{ detailtransaksi.qty }}</td>
+            <!-- <td>{{ detailtransaksi.diskon }}</td> -->
+            <td>{{ detailtransaksi.total_harga_produk }}</td>
+          </tr>
+        {% empty %}
+         <tr>
+            <td colspan="4">Transaksi kosong!</td></tr>
+      {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+          <td colspan="2"><b>TOTAL</b></td>
+          <td colspan="1"><font size="5" style="color: red;"><b>{{ transaksi.total_transaksi }}</b></font></td>
+        </tr>
+      </tfoot>
+  </table>
+</div></div></div></div></div></div><br><br>
+  <tr>
+    <td>
+      <a class="fa fa-mail-reply btn btn-danger" href="{% url 'view_transaksi_page' %}"></a>
+    </td>
+    <td>
+      <a class="fa fa-print btn btn-success" href="#" data-toggle="modal" data-target="#myModal"> CETAK NOTA</a>
+    </td>
+  </tr>
+  <iframe name="print_frame" width="0" height="0" frameborder="0" src="#"></iframe>
+
+
+<!--MODAAAAAAAAAAAAAAAAAAAAAAAAL -->
+<!-- 
+<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button> -->
+
+    <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        
+        <div class="modal-body">
+          <link href="{% static "css/modalpop.css" %}" rel="stylesheet">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <div id="dvContents">
+        <div id="head">
+          <p class="teks1">RM. SFA Steak & Resto</p>
+          <p class="teks2">Jl. Slamet Riyadi No. 414 (Makam Haji), Kartasura</p>
+          <p class="teks3">Telp. 0271-6491268</p>
+        </div>
+        <div class="clear">
+        </div>
+        <table>
+          <tr>
+            <td class="p">Nama Pelanggan</td>
+            <td>:</td>
+            <td><span> <font style="color: red;"><b>{{ transaksi.pelanggan.nama }}</b></font></span></td>
+          </tr>
+          <tr>
+            <td class="p">Nomor meja</td>
+            <td>:</td>
+            <td>{{ transaksi.pelanggan.meja.nomor }}<span>( {{ transaksi.pelanggan.meja.fasilitas }} )</span></td>
+          </tr>
+        </table>
+        <div class="contents">
+            <table class="label" width="100%">
+              <thead>
+                <tr>
+                    <td class="name" width="30%">
+                        <strong>MENU</strong>
+                    </td>
+                    <td class="name1" width="20%">
+                        <strong>QTY</strong></td>
+                    <td class="name" width="40%">
+                        <strong>HARGA</strong>
+                    </td>
+                </tr>
+              </thead>
+                <tbody>
+                  {% for detailtransaksi in semua_transaksi %}
+                  <tr>
+                    <td>{{ detailtransaksi.produk.nama }}</td>
+                    <td align="center">{{ detailtransaksi.qty }}x</td>
+                    <td>Rp. {{ detailtransaksi.total_harga_produk }}</td>
+                  </tr>
+                  {% empty %}
+                 <tr>
+                    <td colspan="4">Transaksi kosong!</td></tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                  <td></td>
+                  <td>**TOTAL </td>
+                    <td>Rp. 
+                      <input class="name input-print" type="number" id="type1" value="{{ transaksi.total_transaksi }}" readonly="">
+                    <td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>Cash</td>
+                  <td>Rp. 
+                    <!--<input class="input-print" type="number" id="type2" onkeyup="kalkulatorTambah(getElementById('type1').value, this.value);" required>-->
+                    <input class="name input-print" type="number" id="type2" required>
+                  </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Change</td>
+                    <td class="name">Rp. 
+                      <strong>
+                        <span id="result"></span>
+                      </strong><br/>
+                    </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+            <div id="head">
+              <p class="teks1">**TERIMA KASIH**</p>
+              <p class="teks2">Atas kunjungan anda</p>
+            </div>
+        </div>
+      </div>
+        
+        
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" id="btnPrint" value="Print" />
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+  // function kalkulatorTambah(type1,type2){
+  //   var hasil = eval(type1) - eval(type2);
+  //   document.getElementById('result').innerHTML = hasil;
+  // }
+
+  
+  $('#type2').keyup(function(){
+    var value1 = $('#type1').val();
+    var value2 = $(this).val();
+    var hasil = value1 - value2;
+    $('#result').html(hasil);
+    $(this).attr({'value': value2});
+  });
+
+  $(function () {
+    $("#btnPrint").click(function () {
+        var contents = $("#dvContents").html();
+        var frame1 = $('<iframe />');
+        frame1[0].name = "frame1";
+        frame1.css({ "position": "absolute", "top": "-1000000px" });
+        $("body").append(frame1);
+        var frameDoc = frame1[0].contentWindow ? frame1[0].contentWindow : frame1[0].contentDocument.document ? frame1[0].contentDocument.document : frame1[0].contentDocument;
+        frameDoc.document.open();
+        frameDoc.document.write('<link href="{% static "css/modalpop.css" %}" rel="stylesheet" type="text/css" />');
+        frameDoc.document.write(contents);
+        frameDoc.document.close();
+        setTimeout(function () {
+            window.frames["frame1"].focus();
+            window.frames["frame1"].print();
+            frame1.remove();
+        }, 500);
+    });
+  });
+
+  function printdiv() {
+    window.frames["print_frame"].document.body.innerHTML =
+        document.getElementById("printableTable").innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+  }
+
+</script>
+{% endblock %}

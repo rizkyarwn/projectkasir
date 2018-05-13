@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<title>W3.CSS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/w3.css">
+<style type="text/css">
+table {
+	background: #fff;
+	padding: 5px;
+}
+tr, td {
+	border: table-cell;
+}
+tr,td {
+	vertical-align: top!important;
+}
+
+.header {
+	text-align: center;
+	padding: 1.5rem 0;
+	margin-bottom: .5rem;
+}
+.footer {
+	text-align: center;
+	padding: 1.5rem 0;
+	margin-top: .5rem;
+}
+.up {
+	margin: 0;
+	font-size: 1.5rem;
+	margin-bottom: .5rem;
+}
+.mid {
+	margin: 0;
+	font-size: 1.0rem;
+	margin-bottom: .5rem;
+}
+.bot {
+	margin: 0;
+	font-size: 1.2rem;
+	margin-bottom: .2rem;
+}
+.kanan {
+	text-align: right;
+}
+
+#right {
+	border-right: none !important;
+}
+#left {
+	border-left: none !important;
+}
+#center{
+	text-align: center;
+}
+
+/* style sheet for "A4" printing */
+@media print and (width: 21cm) and (height: 29.7cm) {
+     @page {
+        margin: 3cm;
+     }
+}
+
+/* style sheet for "letter" printing */
+@media print and (width: 8.5in) and (height: 11in) {
+    @page {
+        margin: 1in;
+    }
+}
+
+/* A4 Landscape*/
+@page {
+    size: auto;
+    margin: 10%;
+}
+
+</style>
+<body>
+
+<div class="w3-container">
+  <h2>W3.CSS Animated Modal</h2>
+
+  <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-black">Fade In Modal</button>
+
+  <div id="id01" class="w3-modal w3-animate-opacity">
+    <div class="w3-modal-content w3-card-4">
+      <header class="w3-container w3-teal"> 
+        <span onclick="document.getElementById('id01').style.display='none'" 
+        class="w3-button w3-large w3-display-topright">&times;</span>
+        <h2>CETAK STRUK NOTA</h2>
+      </header>
+      <div class="w3-container">
+		<div>
+
+			<input type="button" onclick="CallPrint('strid')" value="click me" />
+			<div id="strid">
+			<div class="header"><center>
+				<h1>RM. Sunda malaya adi jaya</h1>
+				<h3>JL. Adi jaya no.102 sundala</h3>
+				<h2>NO TELP 0291 23772</h2>
+				</center>
+				<hr/>
+			</div>
+			<table class="bordered" id="tbl" width="100%">
+				<tr>
+					 <td class="kanan" colspan="3"><strong>Tgl : 11/04/2008</strong></td>
+				</tr>
+				<tr>
+					<td id="right" width="50%"><strong>MENU YG PESAN</strong></td>
+					<td id="center" width="10"><strong>QTY</strong></td>
+          <td id="left" width="400%"><strong>HARGA</strong></td>
+				</tr>
+				<tr>
+					<td>AYAM GORENG</td>
+					<td align="center">2</td>
+					<td>Rp. 15.000</td>
+				</tr>
+				<tr>
+					<td>ES TEH</td>
+					<td align="center">2</td>
+					<td>Rp. 2.500</td>
+				</tr>
+				<tr></tr>
+				<tr>
+					<td colspan="2"></td>
+					<td>
+						<strong>*TOTAL : Rp. 35.000 </strong><br/>
+						<strong>*CASH : Rp. 50.000 </strong><br/>
+      		</td>
+				</tr>
+				<tr>
+					<td id="right" colspan="2"></td>
+					<td>
+						<strong>
+							**KEMBALIAN :<br/>
+							<h1>Rp. 15.000</h1>
+						</strong><br/>
+		      </td>
+			</table>
+			<div class="footer">
+				<hr/><center>
+				<h1>***TERIMA KASIH***</h1>
+				<h3>Atas kunjungan Anda</h3>
+				</center>
+			</div>
+		</div>
+	</div>
+	</div>
+
+	<footer class="w3-container w3-teal">
+		<center><p>CETAK NOTA</p></center>
+	</footer>
+    </div>
+  </div>
+</div>
+            
+</body>
+<script type="text/javascript">
+	function CallPrint(strid) {
+	  var prtContent = document.getElementById(strid);
+	  var WinPrint = window.open('', '', 'left=0,top=0,width=1200,height=800,status=0');
+	  WinPrint.document.write('<html><head><title></title></head>');
+	  WinPrint.document.write('<body style="font-family:verdana; font-size:14px;width:1200px;height:800px:" >');
+	  WinPrint.document.write(prtContent.innerHTML);
+	  WinPrint.document.write('</body></html>');
+	  WinPrint.document.close();
+	  WinPrint.focus();
+	  WinPrint.print();
+	  WinPrint.close();
+	  prtContent.innerHTML = "";
+	}
+</script>
+</html>

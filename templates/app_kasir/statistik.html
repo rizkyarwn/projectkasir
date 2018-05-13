@@ -1,0 +1,279 @@
+{% extends "base.html" %}
+{% load statistik_tags %}
+{% load staticfiles %}
+{% load popular_tags %}
+{% block title %}Homepage - {{ block.super }}{% endblock %}
+
+{% block css %}
+<style>
+body {font-family: Arial;}
+
+/* Style the tab */
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: inherit;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 7px 14px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #eee;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    border-top: none;
+}
+</style>
+{% endblock %}
+{% block content %}
+{% if request.user.is_authenticated %}
+
+  <h1 class="page-header">Page Statistik</h1>
+  <ol class="breadcrumb" style="margin-bottom: 5px;">
+    <li><a href="/">Beranda</a></li>
+    <li class="active">Statistik</li>
+  </ol><br/>
+
+<div class="row">
+<div class="col-lg-7" >
+  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-primary">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Grafik Harian
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+        <div id="chartday" style="height: 300px; width: 800px%;">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Grafik popular -->
+<div class="col-lg-5" >
+  <div class="tab">
+  <button class="tablinks" onclick="openCity(event, 'Makanan')">Makanan</button>
+  <button class="tablinks" onclick="openCity(event, 'Minuman')">Minuman</button>
+</div>
+<p>
+        <div id="Makanan" class="tabcontent">
+          {% popmakanan as popmakanan_ul %}
+          {% for popular_item in popmakanan_ul %}
+          <div class="list-group-item">
+            {{ popular_item.produk_name }}
+            <span class="pull-right text-muted small"><em>{{ popular_item.total_saled }}</em>
+            </span>
+          </div>
+          {% empty %}
+          <p>Belum terdapat transaksi!</p>
+          {% endfor %}
+        </div>
+
+        <div id="Minuman" class="tabcontent">
+          {% popminuman as popminuman_ul %}
+          {% for popular_item in popminuman_ul %}
+          <div class="list-group-item">
+            {{ popular_item.produk_name }}
+            <span class="pull-right text-muted small"><em>{{ popular_item.total_saled }}</em>
+            </span>
+          </div>
+          {% empty %}
+          <p>Belum terdapat transaksi!</p>
+          {% endfor %}
+        </div>
+        <a href="{% url 'view_produk_page' %}" class="btn btn-default btn-block">Lihat Data Produk</a>
+</p>
+
+</div>
+
+<!-- Grafik popular -->
+</div>
+
+<!-- Grafik bulanan -->
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-primary">
+    <div class="panel-heading" role="tab" id="headingThree">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsethree" aria-expanded="true" aria-controls="collapsethree">
+          Grafik Bulanan
+        </a>
+      </h4>
+    </div>
+    <div id="collapsethree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
+      <div class="panel-body">
+        <div id="chartmonth" style="height: 300px; width: 100%;">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% else %}
+Silahkan <a href="{% url 'login_page' %}">Login</a> untuk melihat data APP KASIR!
+{% endif %}{# endif request.user.is_authenticated #}
+{% endblock %}
+
+{% block js %}
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    function openCity(evt, cityName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+
+    //CHART DAY
+    google.charts.load('current', {'packages':['line']});
+    google.charts.setOnLoadCallback(drawChartDay);
+
+    function drawChartDay() {
+
+      var data = new google.visualization.DataTable();
+      data.addColumn('number', 'Jam');
+      data.addColumn('number', 'Total Transaksi');
+
+      data.addRows([
+        [1, {{ 1|get_total_harga_this_day }}],
+        [2, {{ 2|get_total_harga_this_day }}],
+        [3, {{ 3|get_total_harga_this_day }}],
+        [4, {{ 4|get_total_harga_this_day }}],
+        [5, {{ 5|get_total_harga_this_day }}],
+        [6, {{ 6|get_total_harga_this_day }}],
+        [7, {{ 7|get_total_harga_this_day }}],
+        [8, {{ 8|get_total_harga_this_day }}],
+        [9, {{ 9|get_total_harga_this_day }}],
+        [10, {{ 10|get_total_harga_this_day }}],
+        [11, {{ 11|get_total_harga_this_day }}],
+        [12, {{ 12|get_total_harga_this_day }}],
+        [13, {{ 13|get_total_harga_this_day }}],
+        [14, {{ 14|get_total_harga_this_day }}],
+        [15, {{ 15|get_total_harga_this_day }}],
+        [16, {{ 16|get_total_harga_this_day }}],
+        [17, {{ 17|get_total_harga_this_day }}],
+        [18, {{ 18|get_total_harga_this_day }}],
+        [19, {{ 19|get_total_harga_this_day }}],
+        [20, {{ 20|get_total_harga_this_day }}],
+        [21, {{ 21|get_total_harga_this_day }}],
+        [22, {{ 22|get_total_harga_this_day }}],
+        [23, {{ 23|get_total_harga_this_day }}],
+        [24, {{ 24|get_total_harga_this_day }}]
+      ]);
+
+      var options = {
+        chart: {
+          title: 'Grafik Transaksi Hari ini',
+          //subtitle: 'Total keseluruhan hari ini : 0 ,-'
+          backgroundColor: { fill:'transparent' }
+        },
+        axes: {
+          x: {
+            0: {side: 'top'}
+          }
+        }
+      };
+      var chart = new google.charts.Line(document.getElementById('chartday'));
+      chart.draw(data, google.charts.Line.convertOptions(options));
+
+      // {{ 3|get_total_transaksi_this_month }}
+    }
+
+    //CHART MONTH
+    google.charts.load('current', {'packages':['bar']});
+    google.charts.setOnLoadCallback(drawStuff);
+
+    function drawStuff() {
+      var data = new google.visualization.arrayToDataTable([
+        ['Per Bulan', 'Total :'],
+        ["January", {{ 1|get_total_transaksi_this_month }}],
+        ["February", {{ 2|get_total_transaksi_this_month }}],
+        ["Maret", {{ 3|get_total_transaksi_this_month }}],
+        ["April", {{ 4|get_total_transaksi_this_month }}],
+        ["Mei", {{ 5|get_total_transaksi_this_month }}],
+        ["Juni", {{ 6|get_total_transaksi_this_month }}],
+        ["Juli", {{ 7|get_total_transaksi_this_month }}],
+        ["Agustus", {{ 8|get_total_transaksi_this_month }}],
+        ["September", {{ 9|get_total_transaksi_this_month }}],
+        ["November", {{ 10|get_total_transaksi_this_month }}],
+        ["Desember", {{ 11|get_total_transaksi_this_month }}]
+      ]);
+
+      var options = {
+        width: 1000,
+        legend: { position: 'none' },
+        chart: {
+          title: 'Grafik Transaksi Bulanan ini',
+          //subtitle: 'popularity by percentage' 
+        },
+        axes: {
+          x: {
+            0: { side: 'bot'} // Top x-axis.
+          }
+        },
+        bar: { groupWidth: "100%" }
+      };
+
+      var chart = new google.charts.Bar(document.getElementById('chartmonth'));
+      // Convert the Classic options to Material options.
+      chart.draw(data, google.charts.Bar.convertOptions(options));
+    };
+
+    //CHART PRODUK POPULAR
+    google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChartPop);
+      function drawChartPop() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          ['Work',     11],
+          ['Eat',      2],
+          ['Commute',  3],
+          ['Watch TV', 2],
+          ['Sleep',    7]
+        ]);
+
+        var options = {
+          title: 'Produk Popular',
+          pieHole: 0.4,
+          'width':500,
+          'height':300,
+          backgroundColor: { fill:'transparent' }
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('chartpop'));
+        chart.draw(data, options);
+      }
+
+  </script>
+{% endblock %}

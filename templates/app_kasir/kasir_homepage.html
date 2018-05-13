@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Homepage - {{ block.super }}{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+
+<!-- ISI CONTENT -->
+
+<h1 class="page-header">Pilih Meja</h1>
+  <ol class="breadcrumb" style="margin-bottom: 5px;">
+    <li><a href="/">Beranda</a></li>
+    <li class="active">Meja</li>
+  </ol><br/>
+
+<div class="row">
+  <div class="col-lg-9">
+    <div class="panel panel-primary">
+      <div id="exTab2" class="panel-body">
+
+<ul class="nav nav-tabs">
+      <li class="active">
+        <a  href="#1" data-toggle="tab">Duduk</a>
+      </li>
+      <li>
+        <a href="#2" data-toggle="tab">Lesehan</a>
+      </li>
+    </ul>
+
+      <div class="tab-content ">
+        <div class="tab-pane active" id="1">
+          <h3>
+            {% for MejaPesan in semua_meja_duduk %}
+            <div class="col-md-3">
+              <a class="btn text-center thumbnail" style="padding: 3em 0;"
+              href="{%  url 'add_order_page' meja_id=MejaPesan.id %}">
+           <b>Duduk : {{ MejaPesan.nomor }}</b>
+         </a>
+       </div>
+       {% endfor %}
+
+          </h3>
+        </div>
+        <div class="tab-pane" id="2">
+          <h3>
+            {% for MejaPesan in semua_meja_lesehan %}
+            <div class="col-md-3">
+              <a class="btn text-center thumbnail" style="padding: 3em 0;"
+              href="{%  url 'add_order_page' meja_id=MejaPesan.id %}">
+           <b>Lesehan : {{ MejaPesan.nomor }}</b>
+         </a>
+       </div>
+       {% endfor %}
+
+          </h3>
+        </div>
+      </div>
+  </div>
+  <!-- EXAMPLE -->
+
+</div>
+</div>
+
+<div class="col-lg-3">
+  {% include "includes/right_sidebar.html" %}
+</div></div>
+
+
+{% else %}
+Silahkan <a href="{% url 'login_page' %}">Login</a> untuk melihat data APP KASIR!
+{% endif %}{# endif request.user.is_authenticated #}
+{% endblock %}

@@ -1,0 +1,24 @@
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">APP Kasir</a>
+    </div>
+
+    <ul class="nav navbar-top-links navbar-right">
+
+      <!-- USER -->
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+          <i class="fa fa-user fa-fw"></i>
+          <i class="fa fa-caret-down"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-user">
+          {% if request.user.is_authenticated %}
+          <li><a href="{% url 'logout_page' %}">Logout</a></li>
+          {% else %}
+          <li><a href="{% url 'login_page' %}">Login</a></li>
+          {% endif %}
+        </ul>
+      </li>
+      <!-- END USER -->
+    </ul>
+    

@@ -1,0 +1,23 @@
+{% load popular_tags %}
+
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <i class="fa fa-bell fa-fw"></i>Produk popular
+  </div>
+  {% populartags as populartags_ul %}
+
+  <div class="list-group">
+    {% for popular_item in populartags_ul %}
+    <div class="list-group-item">
+      {{ popular_item.produk_name }}
+      <span class="pull-right text-muted small"><em>{{ popular_item.total_saled }}</em>
+      </span>
+    </div>
+    {% empty %}
+    <p>Belum terdapat transaksi!</p>
+    {% endfor %}
+
+    <!-- /.list-group -->
+    <a href="{% url 'view_produk_page' %}" class="btn btn-default btn-block">Lihat Data Produk</a>
+  </div>
+</div>

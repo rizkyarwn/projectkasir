@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Tambah Produk - {{ block.super }}{% endblock %}
+
+{%  block content %}
+    <form class="form" action="." method="POST">{% csrf_token %}
+      {{ form.as_p}}
+        <button type="submit">Tambah</button>
+    </form>
+{% endblock %}

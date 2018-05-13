@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}Homepage - {{ block.super }}{% endblock %}
+
+{% block css %}
+<link href="{% static "css/bootstrap-datepicker.min.css" %}" rel="stylesheet">
+<style>
+  table {
+      border-spacing: 0;
+      border: 1px solid #ddd;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+  <h1 class="page-header">Page Transaksi</h1>
+  <ol class="breadcrumb" style="margin-bottom: 5px;">
+    <li><a href="/">Beranda</a></li>
+    <li class="active">Transaksi</li>
+  </ol><br/>
+
+  <form method="get" action=".">{% csrf_token %}
+    <div class="form-group">
+      <div class='input-group date'>
+        <input type='text' name="start_date" class="form-control" data-provide="datepicker" placeholder="dari tanggal" style="width:30%" required />
+        <input type='text' name="end_date" class="form-control" data-provide="datepicker" placeholder="sampai tanggal" style="width:30%" required />
+        <!-- <span class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+        </span> -->
+        <button class="btn btn-primary" type="submit">Filter</button>
+      </div>
+    </div>
+  </form>
+
+<!-- BLOCK CONTENT -->
+<div class="row">
+  <div class="col-lg-12">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        Transaksi
+      </div>
+      <!-- /.panel-heading -->
+      <div class="panel-body">
+<table id="tabel" class="display" style="width:100%">
+  <thead>
+    <tr>
+      <th hidden></th>
+      <th>Nama Pelanggan</th>
+      <th>Tanggal Pesan</th>
+      <th>Tanggal Transaksi</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for transaksi in semua_transaksi %}
+    <tr>
+      <td hidden></td>
+      <td>
+        <a href="{% url 'view_detail_transaksi_page' pk=transaksi.pk %}" title="Detail Transaksai {{ transaksi.pelanggan.nama  }}">
+          <span>
+            <b>{{ transaksi.pelanggan.nama  }}</b>
+          </span>
+        </a>
+      </td>
+      <td>{{ transaksi.tanggal_order }}</td>
+      <td>{{ transaksi.tanggal_transaksi }}</td>
+      <td>{{ transaksi.total_transaksi}}</td>
+    </tr>
+    {% empty %}
+      <tr>
+        <td colspan="4">Transaksi kosong!</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+{% else %}
+    Silahkan <a href="{% url 'login_page' %}">Login</a> untuk melihat data APP KASIR!
+  {% endif %}{# endif request.user.is_authenticated #}
+
+{% endblock %}
+{% block js %}
+<script src="{% static 'js/datepicker.min.js' %}"></script>
+<script type="text/javascript">
+  $.fn.datepicker.defaults.format = "yyyy-mm-dd";
+      $('.datepicker').datepicker({
+          startDate: '-3d'
+      });
+      
+  $(document).ready(function() {
+    var table = $('#tabel').DataTable( {
+      rowReorder: true
+    } );
+  });
+
+  //DELETE
+  function confirmDelete(delUrl) {
+    if (confirm("Are you sure you want to delete?")) {
+      document.location = delUrl;
+    }
+  }
+  //PROSES
+  function confirmAdd(addUrl) {
+    if (confirm("Are you sure you want to Proses Transaksi?")) {
+      document.location = addUrl;
+    }
+  }
+    </script>
+{% endblock %}

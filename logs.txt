@@ -1,0 +1,12 @@
+root@localhost:~# mkdir projects
+root@localhost:~# cd projects/
+root@localhost:~/projects# virtualenv --python=/usr/bin/python3 env-kasir
+Running virtualenv with interpreter /usr/bin/python3
+Using base prefix '/usr'
+New python executable in /root/projects/env-kasir/bin/python3
+Also creating executable in /root/projects/env-kasir/bin/python
+Installing setuptools, pip, wheel...done.
+root@localhost:~/projects# cd env-kasir/
+root@localhost:~/projects/env-kasir# source bin/activate
+(env-kasir) root@localhost:~/projects/env-kasir# pip install Django
+(env-kasir) root@localhost:~/projects/env-kasir# django-admin startproject projectkasir

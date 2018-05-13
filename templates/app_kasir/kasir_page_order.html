@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+{% block title %}Order - {{ block.super }}{% endblock %}
+
+{% block css %}
+<style>
+  .pencarian-produk {
+    position: relative;
+  }
+  .produk-hasil {
+    position: absolute;
+    top: 2.5em;
+    background: #fff;
+    width: 100%;
+    padding-left: 2em;
+    box-shadow: 0 2px 2px #ddd;
+    border: 1px solid #ddd;
+  }
+  .produk-hasil li {
+    margin: .5em 0;
+  }
+#input-hidden{
+  background: transparent;
+  border: none;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 class="page-header">Page Tambah Order</h1>
+  <ol class="breadcrumb" style="margin-bottom: 5px;">
+    <li><a href="/">Beranda</a></li>
+    <li class="active">Tambah Order</li>
+  </ol><br/>
+<div class="row">
+  <div class="col-lg-9">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        TABEL TAMBAH ORDER
+      </div>
+      <!-- /.panel-heading -->
+      <div class="panel-body">
+  <form class="form" method="POST" action=".">
+    <div class="row">
+      <div class="col-md-6">
+        <input type="text" name="nama_pelanggan" class="form-control" placeholder="Masukkan nama"
+          {% if order %}value="{{ order.pelanggan.nama }}{% endif %}" required>
+      </div>
+      <div class="col-md-6 text-xl-center btn btn-default" disabled>
+        <span color="red"><b>{{ MejaPesan.nomor }}</b></span><br>
+        <span>{{ MejaPesan.fasilitas }}</span>
+        <input type="hidden" name="meja_pesan" value="{{ MejaPesan.pk }}"/>
+      </div>
+    </div><br>
+    <div class="pencarian-produk">
+      <input class="form-control" type="text" name="cari-produk"
+        placeholder="Ketik produk yang akan ditambahkan...">
+      <ol class="produk-hasil"></ol>
+    </div><br>
+
+    {% csrf_token %}
+    <table class="table table-bordered table-hover table-striped">
+      <thead>
+        <tr>
+          <th>Nama Produk</th>
+          <th>Satuan</th>
+          <th>Jumlah</th>
+          <th>Total</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody class="produk-pesanan"></tbody>
+      <tfoot>
+        {% if order %}
+          {% for detail_order in order.get_detail_orders %}
+            <tr class="tr-produk-value">
+              <td>{{ detail_order.produk.nama }}</td>
+              <td><input type="text" name="harga" class="form-control input-harga" id="input-hidden" value="{{ detail_order.produk.harga }}" disabled></td>
+              <td><center><input type="number" name="qty" class="input-qty" style="width: 40px;" value="{{ detail_order.qty }}" min="1"></center></td>
+              <td><input type="text" class="form-control input-jumlah" id="input-hidden" value="{{ detail_order.total_harga_produk }}" disabled>
+              <input type="hidden" value="{{ detail_order.produk.pk }}" name="pk"></td>
+              <td><span class="btn btn-xs btn-danger btn-hapus-produk">Hapus</span></td>
+            </tr>
+          {% endfor %}
+        {% endif %}
+        <tr>
+          <td colspan="3"><b>TOTAL</b></td>
+          <td colspan="2" class="total-harga">
+            Rp. {% if order %}{{ order.total_order }}{% else %}0{% endif  %}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4"></td>
+          <td><input type="submit" class="btn btn-success" value="Simpan"></td>
+        </tr>
+      </tfoot>
+    </table>
+  </form>
+</div>
+</div>
+</div>
+  <div class="col-lg-3">
+  {% include "includes/right_sidebar.html" %}
+</div>
+</div>
+{% endblock %}
+
+{% block js %}
+  <script type="text/javascript">
+    /*
+      $("#qty").keyup(function(){
+          total = $("#qty").val()* $("#harga").val();
+          $("#jumlah").val(total);
+      });
+      $("#harga").keyup(function(){
+          total = $("#qty").val()* $("#harga").val();
+          $("#jumlah").val(total);
+      });
+    */
+
+    // ini ditambahkan pada saat addProduct guna pengecualian
+    // produk yang telah ditambahkan.
+    var selected_products = [];
+
+    // pencarian produk secara realtime menggunakan ajax.
+    var inp = $('input[name="cari-produk"]');
+    inp.keyup(function () {
+        var query = this.value;
+        if(query.trim().length >= 1) {
+            $.ajax({
+                type: 'GET',
+                url: '{% url "search_json_produk_page" %}?q='+query,
+                success: function (response) {
+                    var html = '';
+                    var data = response.data;
+                    for (i = 0; i < data.length; i++) {
+                        // produk yang ditambahkan hanya produk
+                        // yang tidak terdapat di `selected_products`.
+                        if(!selected_products.includes(data[i].pk)) {
+                            html += '<li>'+data[i].nama
+                                  + ' <span class="btn btn-xs btn-success btn-add-produk"'
+                                  + ' data-pk="'+data[i].pk+'"'
+                                  + ' data-nama="'+data[i].nama+'"'
+                                  + ' data-harga="'+data[i].harga+'">+ Tambahkan</span>'
+                                  + '</li>';
+                        }
+                    }
+                    $('.produk-hasil').html(html);
+                }
+            });
+        }else {
+            $('.produk-hasil').html('');
+        }
+    });
+
+    // penambahan produk yang telah dicari kedalam form order.
+    var tbody = $('tbody.produk-pesanan');
+    //var selected_produi cts = [];
+    $(document).on('click', '.btn-add-produk', function () {
+        var pk = $(this).data('pk');
+        var nama = $(this).data('nama');
+        var harga = $(this).data('harga');
+        var html = '<tr class="tr-produk-value">'
+                  +'<td>'+nama+'</td>'
+                  
+                  +'<td><input type="text" name="harga" class="form-control input-harga" id="input-hidden" value="'+harga+'" disabled></td>'
+                  +'<td><input type="number" name="qty" class="input-qty" style="width: 40px;"  value="1" min="1"></td>'
+                  +'<td><input type="text" class="form-control input-jumlah" id="input-hidden" value="'+harga+'" disabled>'
+                  +'<input type="hidden" value="'+pk+'" name="pk"></td>'
+                  +'<td><span class="btn btn-xs btn-danger btn-hapus-produk">Hapus</span></td>'
+                  +'</tr>'
+        tbody.append(html);
+        selected_products.push(pk);
+        $(this).closest('li').remove();
+        updateHargaTotal();
+    });
+
+    // penghapusan produk yang dipesan
+    $(document).on('click', '.btn-hapus-produk', function () {
+        $(this).closest('tr').remove();
+    });
+
+    $(document).on('keyup input', '.input-qty', function () {
+        var tr = $(this).closest('tr');
+        var qty = $(this).val();
+        var harga = tr.find('.input-harga').val();
+        tr.find('.input-jumlah').val(qty*harga);
+        updateHargaTotal();
+    });
+
+    function updateHargaTotal() {
+        var tr = $('.tr-produk-value');
+        var total = 0;
+        for (i = 0; i < tr.length; i++) {
+            var harga_total_per_item = $(tr[i]).find('.input-jumlah').val();
+            total += parseInt(harga_total_per_item);
+        }
+        $('.total-harga').html('Rp. '+total);
+    }
+  </script>
+{% endblock %}

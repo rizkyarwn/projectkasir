@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}Homepage - {{ block.super }}{% endblock %}
+
+{% block css %}
+<style>
+  table {
+      border-spacing: 0;
+      border: 1px solid #ddd;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+  <h1 class="page-header">Page Order</h1>
+  <ol class="breadcrumb" style="margin-bottom: 5px;">
+    <li><a href="/">Beranda</a></li>
+    <li class="active">Order</li>
+  </ol><br/>
+
+<!-- BLOCK CONTENT -->
+<div class="row">
+  <div class="col-lg-12">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        Ordering
+      </div>
+      <!-- /.panel-heading -->
+      <div class="panel-body">
+<table id="tabel" class="display" style="width:99%">
+  <thead>
+    <tr>
+      <th>No. Meja/fasilitas</th>
+      <th>Nama Pelanggan</th>
+      <th>Tanggal Order</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for order in semua_order %}
+    <tr>  
+      <td>{{ order.pelanggan.meja.nomor }} ({{ order.pelanggan.meja.fasilitas }})</td>
+      <td>
+        <a href="{% url 'view_detail_order_page' pk=order.pk %}" data-toggle="tooltip" data-placement="top" title="Detail Order ({{ order.pelanggan.nama  }})">
+        <span>{{ order.pelanggan.nama  }} </span>
+      </td>
+      <td>{{ order.tanggal_order }}</td>
+      <td>
+        <a class="fa fa-edit btn btn-warning" href="{% url 'update_order_page' pk=order.pk %}" data-toggle="tooltip" data-placement="top" title="Edit Order"></a>
+        <a class="fa fa-trash-o btn btn-danger" href="javascript:confirmDelete('{% url "delete_order_page" pk=order.pk %}')" data-toggle="tooltip" data-placement="top" title="Delete Order ({{ order.pelanggan.nama  }})"></a> 
+        | <a class="fa fa-refresh btn btn-danger" href="javascript:confirmAdd('{% url 'add_data_transaksi' order_id=order.id %}')" data-toggle="tooltip" data-placement="top" title="Proses Order"></a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="4">Transaksi kosong!</td>
+    </tr>
+      {% endfor %}
+  </tbody>
+</table></div></div></div></div>
+{% else %}
+    Silahkan <a href="{% url 'login_page' %}">Login</a> untuk melihat data APP KASIR!
+  {% endif %}{# endif request.user.is_authenticated #}
+
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+  //TABLE
+  $(document).ready(function() {
+    var table = $('#tabel').DataTable( {
+      rowReorder: true
+    } );
+  } );
+
+  //DELETE
+  function confirmDelete(delUrl) {
+    if (confirm("Are you sure you want to delete?")) {
+      document.location = delUrl;
+    }
+  }
+  //PROSES
+  function confirmAdd(addUrl) {
+    if (confirm("Are you sure you want to Proses Transaksi?")) {
+      document.location = addUrl;
+    }
+  }
+    </script>
+{% endblock %}
