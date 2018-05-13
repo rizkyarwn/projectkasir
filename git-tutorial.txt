@@ -1,0 +1,9 @@
+Unggah File ke github:
+
+1. lakukan perubahan pada file
+2. posisi terminal sejajar dengan manage.py
+3. git add .
+4. git commit -m 'Komentar perubahan anda'
+5. git push origin master
+
+* More informations: https://git-scm.com/docs/gittutorial
