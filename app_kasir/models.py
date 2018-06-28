@@ -7,6 +7,28 @@ class ProdukManager(models.QuerySet):
     def published(self):
         return self.filter(ditampilkan=True)
 
+
+# """ NAMA WARUNG """
+# class NamaWa(object):
+#     """docstring for NamaWa"""
+#     nama = models.CharField(max_length=50)
+#     alamat = models.TextField()
+#     telp = models.IntegerField()
+#     teks = models.TextField()
+
+#     def __init__(self, arg):
+#         super(NamaWa, self).__init__()
+#         self.arg = arg
+""" PROFIL WARUNG """
+class ProfilWarung(models.Model):
+    nama = models.CharField(max_length=100)
+    telp = models.CharField(max_length=20)
+    alamat = models.TextField()
+
+    def __str__(self):
+        return self.nama
+
+
 """ PRODUK """
 class Produk(models.Model):
     author = models.ForeignKey(User, related_name='author_product')
@@ -31,6 +53,7 @@ class Produk(models.Model):
 
     class Meta:
         ordering = ['-tanggal_dibuat']
+
 
 """ MEJA PESAN """
 class MejaPesan(models.Model):
@@ -57,6 +80,7 @@ class Pelanggan(models.Model):
     def __str__(self):
         return self.nama
 
+
 """ ORDER/PESANAN """
 class Order(models.Model):
     pelanggan = models.ForeignKey(Pelanggan)
@@ -78,6 +102,7 @@ class Order(models.Model):
 
     class Meta:
         ordering = ['-tanggal_order']
+
 
 """ DETAIL ORDER/PESANAN """
 class DetailOrder(models.Model):
@@ -113,6 +138,7 @@ class Transaksi(models.Model):
 
     class Meta:
         ordering = ['-tanggal_transaksi']
+
 
 """ DETAIL TRANSAKSI/PEMBAYARAN """
 class DetailTransaksi(models.Model):

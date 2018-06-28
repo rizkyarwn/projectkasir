@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}Homepage - {{ block.super }}{% endblock %}
+{% block css %}
+ <link href="{% static "font-awesome/css/font-awesome.css" %}" rel="stylesheet">
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box;}
+
+.input-container {
+    display: -ms-flexbox; /* IE10 */
+    display: flex;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.icon {
+    padding: 10px;
+    background: dodgerblue;
+    color: white;
+    min-width: 50px;
+    text-align: center;
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px;
+    outline: none;
+}
+
+.input-field:focus {
+    border: 2px solid dodgerblue;
+}
+
+</style>
+{% endblock css %}
+{% block content %}
+  <h1 class="page-header">Page Order</h1>
+  <ol class="breadcrumb" style="margin-bottom: 5px;">
+    <li><a href="/">Beranda</a></li>
+    <li class="active">Order</li>
+  </ol><br/>
+
+<!-- BLOCK CONTENT -->
+<div class="row">
+  <div class="col-lg-9">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        Profil Warung
+      </div>
+			<form style="max-width:800px;margin:10" method="POST">{% csrf_token %}
+				<h2>Profil Warung</h2>
+
+				<label>Nama Warung :</label>
+				<div class="input-container">
+					<input class="input-field" type="text" name="nama" value="{{ semua_profil.nama }}">
+				</div>
+
+				<label>No. Telp :</label>
+				<div class="input-container">
+					<input class="input-field" type="text" name="telp" value="{{ semua_profil.telp }}">
+				</div>
+
+				<label>Alamat :</label>
+				<div class="input-container">
+					<textarea class="input-field" name="alamat">{{ semua_profil.alamat }}</textarea>
+				</div>
+
+			<button class="btn btn-primary" style="width: 100px" type="submit">SIMPAN</button>
+			</form>
+		</div>
+		</div>
+
+<div class="col-lg-3">
+  {% include "includes/right_sidebar.html" %}
+</div>
+
+	</div>
+</div>
+{% endblock content %}

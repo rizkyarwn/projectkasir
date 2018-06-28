@@ -13,7 +13,7 @@
     </form> -->
 
     <!-- FORM -->
-  <form class="form" action="." method="POST">{% csrf_token %}
+<!--   <form class="form" action="." method="POST">{% csrf_token %}
       <div class="col-25">
         <label for="tipe">Tipe Produk</label>
       </div>
@@ -25,24 +25,72 @@
       </div>
       <div class="col-75">
       	{{ form.nama }}
-        <!-- <input type="text" id="Nama" name="nama" value=""> -->
       </div>
       <div class="col-25">
         <label for="lname">Harga produk</label>
       </div>
       <div class="col-75">
       	{{ form.harga }}
-        <!-- <input type="number" id="harga" name="harga" value=""> -->
       </div>
       <div class="col-25">
         <label for="info">info</label>
       </div>
       <div class="col-75">
       	{{ form.info }}
-        <!-- <textarea id="info" name="info" style="height:200px"></textarea> -->
     </div>
     	<button type="submit" class="btn btn-default">Submit</button>
+  </form> -->
+<div class="row">
+  <div class="col-sm-9">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+      Produk Makanan
+      </div>
+      <div class="panel-body">
+        <form class="form-horizontal" action="." method="POST">{% csrf_token %}
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="tipe">Kategori :</label>
+      <div class="col-sm-10">
+        {{ form.tipe }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="fname">Nama produk :</label>
+      <div class="col-sm-10">
+      {{ form.nama }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="fname">Harga produk :</label>
+      <div class="col-sm-10">
+      {{ form.harga }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="fname">Keterangan produk :</label>
+      <div class="col-sm-10">
+      {{ form.info }}
+      </div>
+    </div>
+
+    <div class="form-group">        
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-default">Submit</button>
+      </div>
+    </div>
   </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-3">
+  {% include "includes/right_sidebar.html" %}
+</div>
+</div>
+
+  
 
 {% endblock %}
 

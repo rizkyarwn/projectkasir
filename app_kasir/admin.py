@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from app_kasir.models import Produk, MejaPesan, Pelanggan, Order, DetailOrder, Transaksi, DetailTransaksi
+from app_kasir.models import Produk, MejaPesan, ProfilWarung, Pelanggan, Order, DetailOrder, Transaksi, DetailTransaksi
 
 class PelangganAdmin(admin.ModelAdmin):
     list_display = ('nama', 'meja')
@@ -22,6 +22,8 @@ class MejaAdmin(admin.ModelAdmin):
     list_display = ('nomor', 'fasilitas')
 
 admin.site.register(Produk)
+admin.site.register(ProfilWarung)
+
 admin.site.register(MejaPesan, MejaAdmin)
 admin.site.register(Pelanggan, PelangganAdmin)
 

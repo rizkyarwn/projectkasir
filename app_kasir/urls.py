@@ -14,6 +14,8 @@ urlpatterns = [
     url(r'^product/transaksi/$', view_transaksi, name='view_transaksi_page'),
     url(r'^statistik/view/$', view_statistik, name='view_statistik'),
 
+    url(r'^profil/view/$', profil_warung, name='profil_warung_page'),
+
     url(r'^product/detail_transaksi/(?P<pk>[\d-]+)/$', view_detail_transaksi, name='view_detail_transaksi_page'),
     url(r'^product/detail_order/(?P<pk>[\d-]+)/$', view_detail_order, name='view_detail_order_page'),
     url(r'^product/order/delete/(?P<pk>[\d-]+)/$', delete_order, name='delete_order_page'),

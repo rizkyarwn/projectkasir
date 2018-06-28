@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
-from app_kasir.models import MejaPesan, Produk, Pelanggan, Order, DetailOrder, Transaksi, DetailTransaksi
+from app_kasir.models import MejaPesan, ProfilWarung, Produk, Pelanggan, Order, DetailOrder, Transaksi, DetailTransaksi
 from app_kasir.forms import ProdukForm, PelangganForm
 
 @login_required
@@ -18,6 +18,34 @@ def homepage(request):
     }
     return render(request, template_name, context)
 
+
+@login_required
+def profil_warung(request):
+    template_name = 'app_kasir/profil_warung_page.html'
+    semua_profil = ProfilWarung.objects.get(pk=1)
+    if request.method == 'POST':
+        nama = request.POST.get('nama')
+        telp = request.POST.get('telp')
+        alamat = request.POST.get('alamat')
+        profil_edit = ProfilWarung(
+            nama = nama,
+            telp = telp,
+            alamat = alamat, pk=1
+            )
+        profil_edit.save()
+        return redirect('profil_warung_page')
+    context = {
+        'semua_profil' : semua_profil
+    }
+    return render(request, template_name, context)
+
+# """ NAMA WARUNG """
+# def view_namawa():
+#     template_name = 'app_kasir/kasir_page_order_view.html'
+#     semua_namawa = NamaWa.objects.all()
+#     context = {'semua_namawa': semua_namawa}
+#     return render(request, template_name, context)
+    
 """ PRODUK """
 @login_required
 def add_produk(request):
@@ -59,6 +87,7 @@ def delete_produk(request, produk_id):
     produk.delete()
     return redirect('view_produk_page')
 
+@login_required
 def view_produk(request):
     template_name = 'app_kasir/kasir_produk_view.html'
     semua_produk = Produk.objects.all()
@@ -73,6 +102,7 @@ def view_produk(request):
 """ CLOSE PRODUK """
 
 """ PELANGGAN """
+@login_required
 def add_pelanggan(request):
     template_name = 'app_kasir/kasir_pelanggan_add.html'
     form = PelangganForm(request.POST)
@@ -141,12 +171,14 @@ def update_order(request, pk):
         return redirect('view_detail_order_page', pk=order.pk)
     return render(request, template_name, context)
 
+@login_required
 def view_order(request):
     template_name = 'app_kasir/kasir_page_order_view.html'
     semua_order = Order.objects.all()
     context = {'semua_order': semua_order}
     return render(request, template_name, context)
 
+@login_required
 def view_detail_order(request, pk):
     template_name = 'app_kasir/kasir_page_detail_order.html'
     order = get_object_or_404(Order, pk=pk)
@@ -196,6 +228,7 @@ def add_transaksi(request, order_id):
     order.delete()
     return redirect('view_transaksi_page')
 
+@login_required
 def view_transaksi(request):
     template_name = 'app_kasir/kasir_page_transaksi_view.html'
     semua_transaksi = Transaksi.objects.all()
@@ -207,16 +240,24 @@ def view_transaksi(request):
     context = {'semua_transaksi': semua_transaksi}
     return render(request, template_name, context)
 
+@login_required
 def view_detail_transaksi(request, pk):
     template_name = 'app_kasir/kasir_page_detail_transaksi.html'
     transaksi = get_object_or_404(Transaksi, pk=pk)
     semua_transaksi = DetailTransaksi.objects.filter(transaksi=transaksi)
-    context = {'semua_transaksi': semua_transaksi, "transaksi": transaksi}
+    semua_profil = ProfilWarung.objects.get(pk=1)
+    context = {'semua_transaksi': semua_transaksi, "transaksi": transaksi, "semua_profil": semua_profil}
     return render(request, template_name, context)
 
+@login_required
 def view_statistik(request):
     template_name = 'app_kasir/statistik.html'
     semua_transaksi = Transaksi.objects.all()
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+
+    if start_date and end_date:
+        semua_transaksi = semua_transaksi.filter(tanggal_transaksi__range=[start_date, end_date])
     context = {'semua_transaksi': semua_transaksi}
     return render(request, template_name, context)
 """ CLOSE TRANSAKSI """

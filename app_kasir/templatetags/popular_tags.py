@@ -35,7 +35,7 @@ def popminuman():
         } for produk in Produk.objects.all()
     ]
     mapping.sort(key=lambda x: int(x['total_saled']), reverse=True)
-    return mapping[:7]
+    return mapping[:5]
 
 
 @register.assignment_tag
@@ -47,4 +47,4 @@ def popmakanan():
         } for produk in Produk.objects.all()
     ]
     mapping.sort(key=lambda x: int(x['total_saled']), reverse=True)
-    return mapping[:7]
+    return mapping[:5]

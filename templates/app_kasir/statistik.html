@@ -1,11 +1,12 @@
 {% extends "base.html" %}
-{% load statistik_tags %}
 {% load staticfiles %}
-{% load popular_tags %}
+{% load statistik_tags popular_tags %}
+
 {% block title %}Homepage - {{ block.super }}{% endblock %}
 
 {% block css %}
-<style>
+<link href="{% static 'css/bootstrap-datepicker.min.css' %}" rel="stylesheet">
+<style type="text/css">
 body {font-family: Arial;}
 
 /* Style the tab */
@@ -42,39 +43,82 @@ body {font-family: Arial;}
     display: none;
     border-top: none;
 }
+  table {
+      border-spacing: 0;
+      border: 1px solid #ddd;
+  }
+    canvas {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+  }
 </style>
 {% endblock %}
 {% block content %}
-{% if request.user.is_authenticated %}
 
-  <h1 class="page-header">Page Statistik</h1>
-  <ol class="breadcrumb" style="margin-bottom: 5px;">
-    <li><a href="/">Beranda</a></li>
-    <li class="active">Statistik</li>
-  </ol><br/>
+<div class="row" style="margin-top: 1em">
 
-<div class="row">
-<div class="col-lg-7" >
-  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-  <div class="panel panel-primary">
-    <div class="panel-heading" role="tab" id="headingOne">
-      <h4 class="panel-title">
-        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          Grafik Harian
-        </a>
-      </h4>
-    </div>
-    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-      <div class="panel-body">
-        <div id="chartday" style="height: 300px; width: 800px%;">
-        </div>
+  <a href="#">
+    <div class="col-md-4">
+      <div class="panel panel-default panel-body text-center">
+        <h3>{% transaksi_tahun_ini %}</h3>
+        <p>Transaksi tahun ini</p>
       </div>
     </div>
-  </div>
-</div>
-</div>
+  </a>
 
-<!-- Grafik popular -->
+  <a href="#">
+    <div class="col-md-4">
+      <div class="panel panel-default panel-body text-center">
+        <h3>{% transaksi_bulan_ini %}</h3>
+        <p>Transaksi bulan ini</p>
+      </div>
+    </div>
+  </a>
+
+  <a href="#">
+    <div class="col-md-4">
+      <div class="panel panel-default panel-body text-center">
+        <h3>{% transaksi_hari_ini %}</h3>
+        <p>Transaksi hari ini</p>
+      </div>
+    </div>
+  </a>
+
+    <div class="col-sm-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Grafik Harian berdasarkan jam
+      </div>
+      <canvas id="chartjs-0" class="chartjs" width="undefined" height="undefined"></canvas>
+    </div>
+  </div>
+
+  <div class="col-sm-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Grafik Bulanan
+      </div>
+      <canvas id="canvas" class="chartjs" width="undefined" height="undefined"></canvas>
+    </div>
+  </div>
+
+  <div class="col-md-4"> 
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Record
+      </div>
+      <div class="panel-body">
+        <label>Transaksi Hari ini : </label>
+        <div style="font-size: 21px; font-style: italic;">{% total_income_today %}</div><br>
+        <label>Transaksi Bulan ini : </label>
+        <div style="font-size: 22px; font-style: italic;">{% total_income_month %}</div><br>
+        <label>Tansaksi Tahun ini : </label>
+        <div style="font-size: 22px; font-style: italic;">{% total_income_year %}</div>
+      </div>
+    </div>  
+  </div>
+
 <div class="col-lg-5" >
   <div class="tab">
   <button class="tablinks" onclick="openCity(event, 'Makanan')">Makanan</button>
@@ -110,38 +154,79 @@ body {font-family: Arial;}
 </p>
 
 </div>
-
-<!-- Grafik popular -->
+  <div class="col-lg-3">
+  {% include "includes/right_sidebar.html" %}
 </div>
 
-<!-- Grafik bulanan -->
-<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-  <div class="panel panel-primary">
-    <div class="panel-heading" role="tab" id="headingThree">
-      <h4 class="panel-title">
-        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsethree" aria-expanded="true" aria-controls="collapsethree">
-          Grafik Bulanan
-        </a>
-      </h4>
-    </div>
-    <div id="collapsethree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
-      <div class="panel-body">
-        <div id="chartmonth" style="height: 300px; width: 100%;">
-        </div>
+
+</div><hr>
+<label>Filter Periode :</label>
+  <form method="get" action=".">{% csrf_token %}
+    <div class="form-group">
+      <div class='input-group date'>
+        <input type='text' name="start_date" class="form-control" data-provide="datepicker" placeholder="dari tanggal" style="width:30%" required />
+        <input type='text' name="end_date" class="form-control" data-provide="datepicker" placeholder="sampai tanggal" style="width:30%" required />
+        <!-- <span class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+        </span> -->
+        <button class="btn btn-primary" type="submit">Filter</button>
       </div>
     </div>
-  </div>
-</div>
+  </form>
 
-{% else %}
-Silahkan <a href="{% url 'login_page' %}">Login</a> untuk melihat data APP KASIR!
-{% endif %}{# endif request.user.is_authenticated #}
+<!-- BLOCK CONTENT -->
+<div class="row">
+  <div class="col-lg-12">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        Transaksi
+      </div>
+      <!-- /.panel-heading -->
+      <div class="panel-body">
+<table id="tabel" class="display" style="width:100%">
+  <thead>
+    <tr>
+      <th hidden></th>
+      <th>Nama Pelanggan</th>
+      <th>Tanggal Transaksi</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for transaksi in semua_transaksi %}
+    <tr>
+      <td hidden></td>
+      <td>
+        <a href="{% url 'view_detail_transaksi_page' pk=transaksi.pk %}" title="Detail Transaksai {{ transaksi.pelanggan.nama  }}">
+          <span>
+            <b>{{ transaksi.pelanggan.nama  }}</b>
+          </span>
+        </a>
+      </td>
+      <td>{{ transaksi.tanggal_transaksi }}</td>
+      <td>{{ transaksi.total_transaksi}}</td>
+    </tr>
+    {% empty %}
+      <tr>
+        <td colspan="4">Transaksi kosong!</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<!-- <canvas id="canvas"></canvas> -->
+
+
 {% endblock %}
 
 {% block js %}
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-  <script type="text/javascript">
-    function openCity(evt, cityName) {
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script> -->
+<script src="{% static 'js/Chart.min.js' %}"></script>
+<script src="{% static 'js/datepicker.min.js' %}"></script>
+<script type="text/javascript">
+  function openCity(evt, cityName) {
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) {
@@ -155,125 +240,191 @@ Silahkan <a href="{% url 'login_page' %}">Login</a> untuk melihat data APP KASIR
     evt.currentTarget.className += " active";
 }
 
-    //CHART DAY
-    google.charts.load('current', {'packages':['line']});
-    google.charts.setOnLoadCallback(drawChartDay);
 
-    function drawChartDay() {
+  $.fn.datepicker.defaults.format = "yyyy-mm-dd";
+      $('.datepicker').datepicker({
+          startDate: '-3d'
+      });
+      
+  $(document).ready(function() {
+    var table = $('#tabel').DataTable( {
+      rowReorder: true
+    } );
+  });
 
-      var data = new google.visualization.DataTable();
-      data.addColumn('number', 'Jam');
-      data.addColumn('number', 'Total Transaksi');
+  //DELETE
+  function confirmDelete(delUrl) {
+    if (confirm("Are you sure you want to delete?")) {
+      document.location = delUrl;
+    }
+  }
+  //PROSES
+  function confirmAdd(addUrl) {
+    if (confirm("Are you sure you want to Proses Transaksi?")) {
+      document.location = addUrl;
+    }
+  }
 
-      data.addRows([
-        [1, {{ 1|get_total_harga_this_day }}],
-        [2, {{ 2|get_total_harga_this_day }}],
-        [3, {{ 3|get_total_harga_this_day }}],
-        [4, {{ 4|get_total_harga_this_day }}],
-        [5, {{ 5|get_total_harga_this_day }}],
-        [6, {{ 6|get_total_harga_this_day }}],
-        [7, {{ 7|get_total_harga_this_day }}],
-        [8, {{ 8|get_total_harga_this_day }}],
-        [9, {{ 9|get_total_harga_this_day }}],
-        [10, {{ 10|get_total_harga_this_day }}],
-        [11, {{ 11|get_total_harga_this_day }}],
-        [12, {{ 12|get_total_harga_this_day }}],
-        [13, {{ 13|get_total_harga_this_day }}],
-        [14, {{ 14|get_total_harga_this_day }}],
-        [15, {{ 15|get_total_harga_this_day }}],
-        [16, {{ 16|get_total_harga_this_day }}],
-        [17, {{ 17|get_total_harga_this_day }}],
-        [18, {{ 18|get_total_harga_this_day }}],
-        [19, {{ 19|get_total_harga_this_day }}],
-        [20, {{ 20|get_total_harga_this_day }}],
-        [21, {{ 21|get_total_harga_this_day }}],
-        [22, {{ 22|get_total_harga_this_day }}],
-        [23, {{ 23|get_total_harga_this_day }}],
-        [24, {{ 24|get_total_harga_this_day }}]
-      ]);
+var barChartData = {
+      "labels": ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
 
-      var options = {
-        chart: {
-          title: 'Grafik Transaksi Hari ini',
-          //subtitle: 'Total keseluruhan hari ini : 0 ,-'
-          backgroundColor: { fill:'transparent' }
-        },
-        axes: {
-          x: {
-            0: {side: 'top'}
+      "datasets": [{
+        "label": 'Jumlah transaksi',
+        "backgroundColor": [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 99, 132, 0.2)'
+        ],
+        "data": [
+          '{{ 1|get_total_income_this_month }}',
+          '{{ 2|get_total_income_this_month }}',
+          '{{ 3|get_total_income_this_month }}',
+          '{{ 4|get_total_income_this_month }}',
+          '{{ 5|get_total_income_this_month }}',
+          '{{ 6|get_total_income_this_month }}',
+          '{{ 7|get_total_income_this_month }}',
+          '{{ 8|get_total_income_this_month }}',
+          '{{ 9|get_total_income_this_month }}',
+          '{{ 10|get_total_income_this_month }}',
+          '{{ 11|get_total_income_this_month }}',
+          '{{ 12|get_total_income_this_month }}'
+        ]
+      }, {
+        "label": 'Total ',
+        "backgroundColor": [
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(54, 162, 235, 0.2)'
+        ],
+        "data": [
+          '{{ 1|get_total_income_this_month_1 }}',
+          '{{ 2|get_total_income_this_month_1 }}',
+          '{{ 3|get_total_income_this_month_1 }}',
+          '{{ 4|get_total_income_this_month_1 }}',
+          '{{ 5|get_total_income_this_month_1 }}',
+          '{{ 6|get_total_income_this_month_1 }}',
+          '{{ 7|get_total_income_this_month_1 }}',
+          '{{ 8|get_total_income_this_month_1 }}',
+          '{{ 9|get_total_income_this_month_1 }}',
+          '{{ 10|get_total_income_this_month_1 }}',
+          '{{ 11|get_total_income_this_month_1 }}',
+          '{{ 12|get_total_income_this_month_1 }}'
+        ]
+      }]
+    };
+      var ctx = document.getElementById('canvas').getContext('2d');
+      window.myBar = new Chart(ctx, {
+        "type": 'bar',
+        "data": barChartData,
+        "options": {
+          // "title": {
+          //   "display": true,
+          //   "text": 'Chart.js Bar Chart - Stacked'
+          // },
+          "tooltips": {
+            "mode": 'index',
+            "intersect": false
+          },
+          "responsive": true,
+          "scales": {
+            'xAxes': [{
+              'stacked': true,
+            }],
+            "yAxes": [{
+              'stacked': true
+            }]
           }
         }
-      };
-      var chart = new google.charts.Line(document.getElementById('chartday'));
-      chart.draw(data, google.charts.Line.convertOptions(options));
+      });
 
-      // {{ 3|get_total_transaksi_this_month }}
+new Chart(document.getElementById("chartjs-0"),
+  {"type":"bar",
+  "data":{
+    "labels":[
+      '01.00', '02.00', '03.00','04.00', '05.00', '06.00', '07.00', '08.00', '09.00', '10.00', '11.00', '12.00', '13.00', '14.00', '15.00', '16.00', '17.00', '18.00', '19.00', '20.00', '21.00', '22.00', '23.00','24.00' 
+    ],
+  "datasets":[{
+    "label": 'Jumlah Transaksi',
+    "data":[
+      '{{ 1|get_total_harga_this_day }}',
+      '{{ 2|get_total_harga_this_day }}',
+      '{{ 3|get_total_harga_this_day }}',
+      '{{ 4|get_total_harga_this_day }}',
+      '{{ 5|get_total_harga_this_day }}',
+      '{{ 6|get_total_harga_this_day }}',
+      '{{ 7|get_total_harga_this_day }}',
+      '{{ 8|get_total_harga_this_day }}',
+      '{{ 9|get_total_harga_this_day }}',
+      '{{ 10|get_total_harga_this_day }}',
+      '{{ 11|get_total_harga_this_day }}',
+      '{{ 12|get_total_harga_this_day }}',
+      '{{ 13|get_total_harga_this_day }}',
+      '{{ 14|get_total_harga_this_day }}',
+      '{{ 15|get_total_harga_this_day }}',
+      '{{ 16|get_total_harga_this_day }}',
+      '{{ 17|get_total_harga_this_day }}',
+      '{{ 18|get_total_harga_this_day }}',
+      '{{ 19|get_total_harga_this_day }}',
+      '{{ 20|get_total_harga_this_day }}',
+      '{{ 21|get_total_harga_this_day }}',
+      '{{ 22|get_total_harga_this_day }}',
+      '{{ 23|get_total_harga_this_day }}',
+      '{{ 24|get_total_harga_this_day }}'
+    ],
+    // "fill":false,
+    // "backgroundColor":[
+    //   "rgba(255, 99, 132, 0.2)",
+    //   "rgba(255, 159, 64, 0.2)",
+    //   "rgba(255, 205, 86, 0.2)",
+    //   "rgba(75, 192, 192, 0.2)",
+    //   "rgba(54, 162, 235, 0.2)",
+    //   "rgba(153, 102, 255, 0.2)",
+    //   "rgba(201, 203, 207, 0.2)"
+    // ],
+    // "borderColor":[
+    //   "rgb(255, 99, 132)",
+    //   "rgb(255, 159, 64)",
+    //   "rgb(255, 205, 86)",
+    //   "rgb(75, 192, 192)",
+    //   "rgb(54, 162, 235)",
+    //   "rgb(153, 102, 255)",
+    //   "rgb(201, 203, 207)"
+    // ],
+    "borderWidth":2
     }
-
-    //CHART MONTH
-    google.charts.load('current', {'packages':['bar']});
-    google.charts.setOnLoadCallback(drawStuff);
-
-    function drawStuff() {
-      var data = new google.visualization.arrayToDataTable([
-        ['Per Bulan', 'Total :'],
-        ["January", {{ 1|get_total_transaksi_this_month }}],
-        ["February", {{ 2|get_total_transaksi_this_month }}],
-        ["Maret", {{ 3|get_total_transaksi_this_month }}],
-        ["April", {{ 4|get_total_transaksi_this_month }}],
-        ["Mei", {{ 5|get_total_transaksi_this_month }}],
-        ["Juni", {{ 6|get_total_transaksi_this_month }}],
-        ["Juli", {{ 7|get_total_transaksi_this_month }}],
-        ["Agustus", {{ 8|get_total_transaksi_this_month }}],
-        ["September", {{ 9|get_total_transaksi_this_month }}],
-        ["November", {{ 10|get_total_transaksi_this_month }}],
-        ["Desember", {{ 11|get_total_transaksi_this_month }}]
-      ]);
-
-      var options = {
-        width: 1000,
-        legend: { position: 'none' },
-        chart: {
-          title: 'Grafik Transaksi Bulanan ini',
-          //subtitle: 'popularity by percentage' 
-        },
-        axes: {
-          x: {
-            0: { side: 'bot'} // Top x-axis.
-          }
-        },
-        bar: { groupWidth: "100%" }
-      };
-
-      var chart = new google.charts.Bar(document.getElementById('chartmonth'));
-      // Convert the Classic options to Material options.
-      chart.draw(data, google.charts.Bar.convertOptions(options));
-    };
-
-    //CHART PRODUK POPULAR
-    google.charts.load("current", {packages:["corechart"]});
-      google.charts.setOnLoadCallback(drawChartPop);
-      function drawChartPop() {
-        var data = google.visualization.arrayToDataTable([
-          ['Task', 'Hours per Day'],
-          ['Work',     11],
-          ['Eat',      2],
-          ['Commute',  3],
-          ['Watch TV', 2],
-          ['Sleep',    7]
-        ]);
-
-        var options = {
-          title: 'Produk Popular',
-          pieHole: 0.4,
-          'width':500,
-          'height':300,
-          backgroundColor: { fill:'transparent' }
-        };
-
-        var chart = new google.visualization.PieChart(document.getElementById('chartpop'));
-        chart.draw(data, options);
+  ]},
+"options":{
+  "legend": {
+      "display": false
+  },
+  "scales":{
+    "yAxes":[{
+      "ticks":{
+        "min":0
       }
-
-  </script>
+    }]
+  }
+}
+});
+</script>
 {% endblock %}

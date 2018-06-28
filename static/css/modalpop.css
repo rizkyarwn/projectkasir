@@ -1,3 +1,7 @@
+@page{
+  size: auto;
+  margin: 1mm 1mm 1mm 1mm;
+}
 @media print{
   .print-tidak-tampil {
     display: none;
@@ -23,7 +27,7 @@
 
 #head{
   text-align: center;
-  margin: 3rem 0;
+  margin: 2rem 0;
 }
 #nick{
   margin: 1rem 0;

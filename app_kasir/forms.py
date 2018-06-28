@@ -5,10 +5,11 @@ from app_kasir.models import Produk, Pelanggan, Order
 class ProdukForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		super(ProdukForm, self).__init__(*args, **kwargs)
-		self.fields['tipe'].widget.attrs = {'class' : 'form-control', 'style' : 'width : 100px;'}
-		self.fields['nama'].widget.attrs = {'class' : 'form-control', 'style' : 'width : 250px;'}
-		self.fields['harga'].widget.attrs = {'class' : 'form-control', 'style' : 'width : 250px;'}
-		self.fields['info'].widget.attrs = {'class' : 'form-control', 'style' : 'width : 250px;'}
+		self.fields['tipe'].widget.attrs = {'class' : 'form-control'}
+		self.fields['nama'].widget.attrs = {'class' : 'form-control'}
+		self.fields['harga'].widget.attrs = {'class' : 'form-control'}
+		self.fields['info'].widget.attrs = {'class' : 'form-control'}
+		# self.fields['info'].widget.attrs = {'class' : 'form-control', 'style' : 'width : 300px;'}
 		
 	class Meta:
 		model = Produk

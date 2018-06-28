@@ -2,6 +2,11 @@
 {% load staticfiles %}
 {% block title %}Detail Transaksi - {{ block.super }}{% endblock %}
 
+{% block css %}
+<style type="text/css">
+
+</style>
+{% endblock %}
 {% block content %}
 
   <h1 class="page-header">Page Detail Transaksi</h1>
@@ -75,21 +80,22 @@
 <!-- 
 <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button> -->
 
-    <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
+    <!-- Modal -->  
+    <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
     
-      <!-- Modal content-->
+      <!-- Modal content -->
       <div class="modal-content">
         
         <div class="modal-body">
           <link href="{% static "css/modalpop.css" %}" rel="stylesheet">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <div id="dvContents">
+
         <div id="head">
-          <p class="teks1">RM. SFA Steak & Resto</p>
-          <p class="teks2">Jl. Slamet Riyadi No. 414 (Makam Haji), Kartasura</p>
-          <p class="teks3">Telp. 0271-6491268</p>
+          <p class="teks1">{{ semua_profil.nama }}</p>
+          <p class="teks2">{{ semua_profil.alamat }}</p>
+          <p class="teks3">Telp. {{ semua_profil.telp }}</p>
         </div>
         <div class="clear">
         </div>
@@ -97,19 +103,20 @@
           <tr>
             <td class="p">Nama Pelanggan</td>
             <td>:</td>
-            <td><span> <font style="color: red;"><b>{{ transaksi.pelanggan.nama }}</b></font></span></td>
+            <td><span> <font style="color: red;"><b> {{ transaksi.pelanggan.nama }}</b></font></span></td>
           </tr>
           <tr>
             <td class="p">Nomor meja</td>
             <td>:</td>
-            <td>{{ transaksi.pelanggan.meja.nomor }}<span>( {{ transaksi.pelanggan.meja.fasilitas }} )</span></td>
+            <td> {{ transaksi.pelanggan.meja.nomor }}<span> ( {{ transaksi.pelanggan.meja.fasilitas }} )</span></td>
           </tr>
         </table>
+
         <div class="contents">
             <table class="label" width="100%">
               <thead>
                 <tr>
-                    <td class="name" width="30%">
+                    <td class="name" width="50%">
                         <strong>MENU</strong>
                     </td>
                     <td class="name1" width="20%">
@@ -128,7 +135,8 @@
                   </tr>
                   {% empty %}
                  <tr>
-                    <td colspan="4">Transaksi kosong!</td></tr>
+                    <td colspan="4">Transaksi kosong!</td>
+                  </tr>
                     {% endfor %}
                 </tbody>
                 <tfoot>
@@ -141,7 +149,7 @@
                 </tr>
                 <tr>
                   <td></td>
-                  <td>Cash</td>
+                  <td>Bayar</td>
                   <td>Rp. 
                     <!--<input class="input-print" type="number" id="type2" onkeyup="kalkulatorTambah(getElementById('type1').value, this.value);" required>-->
                     <input class="name input-print" type="number" id="type2" required>
@@ -149,7 +157,7 @@
                 </tr>
                 <tr>
                     <td></td>
-                    <td>Change</td>
+                    <td>Kembalian</td>
                     <td class="name">Rp. 
                       <strong>
                         <span id="result"></span>
@@ -159,8 +167,18 @@
               </tfoot>
             </table>
           </div>
-            <div id="head">
-              <p class="teks1">**TERIMA KASIH**</p>
+          <tr>
+            <td class="p">Kasir : </td>
+            <td>{{ user.username }}</td>
+          </tr>
+          <tr>
+            <td class="p"> | {{ transaksi.tanggal_transaksi }}</td>
+          </tr>
+            <div id="head"> 
+              <p class="teks1">
+                <br>
+                **TERIMA KASIH**
+              </p>
               <p class="teks2">Atas kunjungan anda</p>
             </div>
         </div>
@@ -190,7 +208,7 @@
   $('#type2').keyup(function(){
     var value1 = $('#type1').val();
     var value2 = $(this).val();
-    var hasil = value1 - value2;
+    var hasil = value2 - value1;
     $('#result').html(hasil);
     $(this).attr({'value': value2});
   });
