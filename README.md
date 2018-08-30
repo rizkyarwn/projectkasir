@@ -14,8 +14,6 @@ Install projectkasir
    in the folder "env-kasir"
    >$ cd projectkasir-master
 5. Install requirements
-   >$ pip install -r requirements.txt
-   OR
    >$ pip install django==1.11.6
 6. Migrations database
    >$ ./manage.py makemigrations
