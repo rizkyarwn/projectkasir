@@ -1,4 +1,4 @@
-# Projectkasir Tutorial Installing and Issues ( root-tetew# )
+# Projectkasir Tutorial Installing and Issues ( root )
 
 Install projectkasir
 
@@ -22,9 +22,14 @@ Install projectkasir
 7. Running server
    >$ ./manage.py runserver
    
- # Issues Projectkasir
-Change some source-code :
-   
+# Issues Projectkasir
+New Product added cant showing when Order?
+please add code : 
+>{{ form.ditampilkan }}
+
+create code: tag div hidden - paste in the tag code - close tag div
+locations : projectkasir-master/templates/app_kasir/kasir_product_add.html
+Change some source-code :   
 1. `statistik_tags.py`
 When `Statistik` error you can change code
 
@@ -34,5 +39,6 @@ When `Statistik` error you can change code
 When `profile warung` error you can change code
 
     https://pastebin.com/wyCLzrCt
-    
+
+
 Thank you^^
